@@ -1,0 +1,8 @@
+p{
+    text-align: center;
+    background-color: white;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 18px;
+  color: var(--dark);
+  line-height: 1.3;
+}
