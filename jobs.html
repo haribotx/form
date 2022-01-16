@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Job Board</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .bg-paid-ad {
+            background: #fff7b9;
+        }
+    </style>
+
+</head>
+
+<body class="bg-light">
+    <div id="menu-container"></div>
+    <div class="container" id="jobs-container">
+        <!-- This gets replaced when we have some jobs -->
+        <div class="text-center p-5 m-5">
+            <div class="text-muted p-2">Loading jobs...</div>
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    </div>
+    <div class="container" id="footer">
+        <div class="text-muted text-center p-3">Powered by <a href="https://sheet2api.com" target="_blank">sheet2api</a>
+        </div>
+    </div>
+
+    <script>
+        var jobs = [];
+        var categories = [];
+        var title = '';
+
+        // Called once the page has loaded
+        document.addEventListener('DOMContentLoaded', function (event) {
+            loadJobs();
+            loadCategories();
+        });
+
+        // Replace this with your sheet2api API URL
+        var projectUrl = 'https://sheet2api.com/v1/FgI6zV8qT121/template-job-board';
+
+        function loadJobs() {
+            fetch(projectUrl + '/jobs')
+                .then((response) => response.json())
+                .then(json => {
+                    this.jobs = json;
+                    showAllJobs();
+                });
+        }
+
+        function loadCategories() {
+            fetch(projectUrl + '/categories')
+                .then((response) => response.json())
+                .then(json => {
+                    this.categories = json;
+                    outputCategories();
+                })
+        }
+
+        function outputJobs(jobs) {
+            var template = Handlebars.compile(document.getElementById("jobs-template").innerHTML);
+            document.getElementById('jobs-container').innerHTML = template({
+                title: this.title,
+                jobs: jobs
+            });
+        }
+
+        function outputCategories() {
+            var template = Handlebars.compile(document.getElementById("menu-template").innerHTML);
+            document.getElementById('menu-container').innerHTML = template(this.categories);
+        }
+
+        function showAllJobs() {
+            this.title = "All Jobs";
+            outputJobs(this.jobs);
+        }
+
+        function showCategory(category) {
+            this.title = category;
+            let filtered = this.jobs.filter(job => {
+                return job.category == category;
+            });
+            outputJobs(filtered);
+        }
+
+        function toggleMoreInfo(event) {
+            event.target.parentElement.querySelector('.job-more-info')
+            var moreInfoSection = event.target.parentElement.querySelector('.job-more-info');
+            if (moreInfoSection.classList.contains('d-none')) {
+                moreInfoSection.classList.remove("d-none");
+            } else {
+                moreInfoSection.classList.add("d-none");
+            }
+        };
+
+        Handlebars.registerHelper('ifEqual', function (v1, v2, options) {
+            if (v1 === v2) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        });
+
+        Handlebars.registerHelper('breaklines', function (text) {
+            text = Handlebars.Utils.escapeExpression(text);
+            text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+            return new Handlebars.SafeString(text);
+        });
+
+    </script>
+
+    <!-- Template for the main menu / categories -->
+    <script id="menu-template" type="text/x-handlebars-template">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm mb-4">
+            <a class="navbar-brand" href="#" onclick="showAllJobs();">Job Board</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {{#each this as |category|}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showCategory('{{category.name}}');">{{category.name}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="mailto:hello@sheet2api.com?subject=Submit Job" class="btn btn-outline-primary">Submit Job</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </script>
+
+    <!-- Template for the jobs -->
+    <script id="jobs-template" type="text/x-handlebars-template">
+        <h3>{{title}}</h3>
+        <div class="shadow-sm bg-white rounded-lg">
+            {{#each this.jobs as |job|}}
+
+                {{#ifEqual job.is_paid_ad 'TRUE'}}
+                <div class="media border-bottom p-3 bg-paid-ad" id="job-{{job.title}}">
+                {{else}}
+                <div class="media border-bottom p-3" id="job-{{job.title}}">
+                {{/ifEqual}}
+                    <img src="{{job.icon_url}}" width="50" class="mr-3">
+                    <div class="media-body">
+                        <h6 class="m-0">
+                            <a href="{{job.icon_url}}" target="_blank">{{job.title}}</a>
+                        </h6>
+                        <p class="m-0">{{job.company}}</p>
+                        {{#ifEqual job.location 'Remote'}}
+                        <p class="m-0 text-muted"><small>{{job.location}} 🌏</small></p>
+                        {{else}}
+                        <p class="m-0 text-muted"><small>{{job.location}} 📍</small></p>
+                        {{/ifEqual}}
+                        <p class="m-0 text-muted"><small>{{job.category}}</small></p>
+                        <p class="m-0 job-more-info d-none pt-3">
+                            {{breaklines job.long_description}}
+                            <a href="mailto:{{job.apply_email}}?subject=Job Application" class="btn btn-primary mt-3">Apply Now</a>
+                        </p>
+                    </div>
+                    <button class="btn btn-outline-primary more-info" onClick="return toggleMoreInfo(event)">
+                        More info
+                    </button>
+                </div>
+            {{/each}}
+            {{#unless this.jobs}}
+                <p class="p-5 text-center text-muted">No jobs found</p>
+            {{/unless}}
+        </div>
+    </script>
+
+</body>
