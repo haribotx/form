@@ -16,7 +16,17 @@
       <div id="categories"></div>
     </div>
     <div class="right-panel">
-      <div id="searchbox"></div>
+      <div id="searchbox">
+          <script>
+        search.addWidget(
+            instantsearch.widgets.searchBox({
+              container: "#searchbox",
+              placeholder: "Search in your CRM",
+              autofocus: false
+            })
+          ); 
+</script>
+      </div>
       <div id="stats"></div>
       <div id="hits"></div>
       <div id="pagination"></div>

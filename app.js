@@ -1,9 +1,9 @@
 import { hitTemplate } from "./helpers";
 
 const search = instantsearch({
-  appId: "B1G2GM9NG0",
-  apiKey: "aadef574be1f9252bb48d4ea09b5cfe5",
-  indexName: "demo_saas",
+  appId: "1VOG5KQH4V",
+  apiKey: "ffa8fd6cf3293106a06d4a77137b8316",
+  indexName: "hooli",
   searchParameters: {
     hitsPerPage: 4,
     distinct: 3
@@ -12,7 +12,7 @@ const search = instantsearch({
 
 // Uncomment the following widget to add hits list.
 
-/* search.addWidget(
+search.addWidget(
   instantsearch.widgets.hits({
     container: "#hits",
     templates: {
@@ -22,7 +22,7 @@ const search = instantsearch({
       }
     }
   })
-); */
+); 
 
 // Uncomment the following widget to add a search bar.
 
