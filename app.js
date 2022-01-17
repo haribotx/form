@@ -4,9 +4,11 @@ const search = instantsearch({
   appId: "1VOG5KQH4V",
   apiKey: "ffa8fd6cf3293106a06d4a77137b8316",
   indexName: "hooli",
+  routing: true,
   searchParameters: {
     hitsPerPage: 4,
     distinct: 3
+    
   }
 });
 

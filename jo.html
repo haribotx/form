@@ -6,39 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="theme-color" content="#000000">
   <title>Algolia InstantSearch | Media demo</title>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
-  <link rel="stylesheet" type="text/css" href="app.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.4/dist/instantsearch.min.css">
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.4"></script>
+
 </head>
 
 <body>
-  <main class="search-container">
-    <div class="left-panel">
-      <div id="categories"></div>
-    </div>
-    <div class="right-panel">
-      <div id="searchbox">
-          <script>
-        search.addWidget(
-            instantsearch.widgets.searchBox({
-              container: "#searchbox",
-              placeholder: "Search in your CRM",
-              autofocus: false
-            })
-          ); 
-</script>
+    <div id="search-box">
+        <!-- SearchBox widget will appear here -->
       </div>
-      <div id="stats"></div>
-      <div id="hits"></div>
-      <div id="pagination"></div>
-    </div>
-  </main>
-  <footer>
-    Source Code on
-    <a href="https://github.com/algolia/doc-onboarding">GitHub</a> | Powered by
-    <a href="https://www.algolia.com">Algolia</a>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.8.0/dist/instantsearch.min.js"></script>
-  <script src="/app.js"></script>
+      
+      <div id="hits">
+        <!-- Hits widget will appear here -->
+      </div>
+      
+      <script>
+        const search = instantsearch(options);
+      
+        // initialize SearchBox
+        search.addWidget(
+          instantsearch.widgets.searchBox({
+            container: '#search-box',
+            placeholder: 'Search for products'
+          })
+        );
+      
+        // initialize hits widget
+        search.addWidget(
+          instantsearch.widgets.hits({
+            container: '#hits'
+          })
+        );
+      
+        search.start();
+      </script>
 </body>
 
 </html>
