@@ -1,10 +1,3 @@
-<html>
-
-<head>
-
-</head>
-<body>
-
 import { hitTemplate } from "./helpers";
 
 const search = instantsearch({
@@ -58,7 +51,7 @@ search.addWidget(
 
 // Uncomment the following widget to add types list.
 
-/* search.addWidget(
+search.addWidget(
   instantsearch.widgets.refinementList({
     container: "#type",
     attributeName: "type",
@@ -67,8 +60,6 @@ search.addWidget(
       header: "Categories"
     }
   })
-); */
+); 
 
 search.start();
-</body>
-</html>
